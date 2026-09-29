@@ -1,0 +1,112 @@
+/* 座席表アプリの見た目。
+   ダークモードに引っぱられて読めなくならないよう light に固定している。 */
+:root {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  padding: 24px 16px 48px;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  line-height: 1.7;
+  color: #1f2933;
+  background: #f7f8fa;
+}
+
+h1 {
+  margin: 0 0 24px;
+  font-size: 1.5rem;
+}
+
+h2 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  color: #3e4c59;
+}
+
+.layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.panel {
+  flex: 1 1 320px;
+  min-width: 0;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #d8dee6;
+  border-radius: 10px;
+}
+
+.hint {
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+  color: #616e7c;
+}
+
+.hint code {
+  padding: 1px 4px;
+  background: #eef1f5;
+  border-radius: 3px;
+}
+
+textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px;
+  font-family: ui-monospace, 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: inherit;
+  background: #fbfcfd;
+  border: 1px solid #cbd2d9;
+  border-radius: 6px;
+  resize: vertical;
+}
+
+button {
+  margin-top: 12px;
+  padding: 8px 20px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: #fff;
+  background: #2b6cb0;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #2c5282;
+}
+
+/* ここから座席表本体 */
+.chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+}
+
+.seat {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 52px;
+  font-size: 0.8rem;
+  background: #e8f0fb;
+  border: 1px solid #a8c4e6;
+  border-radius: 6px;
+}
+
+/* 通路。見えないが幅だけ持たせて列をそろえる。 */
+.aisle {
+  width: 24px;
+}

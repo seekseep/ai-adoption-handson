@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>画面を作る</title>
+    <style>
+:root { color-scheme: light; }
+      body {
+        margin: 0; padding: 18px 16px 24px;
+        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+        line-height: 1.6; color: #1f2933; background: #f7f8fa;
+      }
+      h1 { margin: 0 0 4px; font-size: 0.95rem; }
+      .lead { margin: 0 0 14px; font-size: 0.78rem; color: #616e7c; }
+      .card { padding: 14px; background: #fff; border: 1px solid #d8dee6; border-radius: 8px; }
+      label { display: block; margin-bottom: 4px; font-size: 0.75rem; color: #616e7c; }
+      input[type="text"], input[type="number"], select {
+        box-sizing: border-box; width: 100%; padding: 6px 8px; font-family: inherit;
+        font-size: 0.85rem; border: 1px solid #cbd2d9; border-radius: 6px; background: #fff;
+      }
+      button {
+        padding: 7px 16px; font-family: inherit; font-size: 0.82rem; color: #fff;
+        background: #2b6cb0; border: none; border-radius: 6px; cursor: pointer;
+      }
+      table { width: 100%; font-size: 0.8rem; border-collapse: collapse; }
+      th, td { padding: 5px 8px; text-align: left; border-bottom: 1px solid #e3e8ee; }
+      th { font-size: 0.7rem; color: #616e7c; background: #f4f6f8; }
+      .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+      .row { display: flex; gap: 8px; align-items: center; font-size: 0.85rem; }
+    </style>
+  </head>
+  <body>
+    <h1>画面を作る</h1>
+    <p class="lead">
+      これは HTML だけで書かれています。プログラムは 1 行も動いていません。
+      入力欄・選択肢・ボタン・表といった部品は、最初から用意されています。
+    </p>
+
+    <div class="card">
+      <div class="grid">
+        <div>
+          <label for="d-name">氏名</label>
+          <input id="d-name" type="text" value="山田 太郎" />
+        </div>
+        <div>
+          <label for="d-dept">部署</label>
+          <select id="d-dept">
+            <option>営業部</option>
+            <option selected>総務部</option>
+            <option>開発部</option>
+          </select>
+        </div>
+        <div>
+          <label for="d-count">人数</label>
+          <input id="d-count" type="number" value="12" />
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:12px">
+        <label class="row" style="margin:0"><input type="checkbox" checked />&nbsp;メールで受け取る</label>
+        <label class="row" style="margin:0"><input type="checkbox" />&nbsp;郵送で受け取る</label>
+      </div>
+
+      <table style="margin-top:14px">
+        <thead><tr><th>日付</th><th>件名</th><th>状態</th></tr></thead>
+        <tbody>
+          <tr><td>10/01</td><td>備品の発注</td><td>完了</td></tr>
+          <tr><td>10/03</td><td>会議室の予約</td><td>対応中</td></tr>
+          <tr><td>10/08</td><td>名刺の手配</td><td>未着手</td></tr>
+        </tbody>
+      </table>
+
+      <p style="margin-top:14px"><button type="button">送信する</button></p>
+    </div>
+  </body>
+</html>

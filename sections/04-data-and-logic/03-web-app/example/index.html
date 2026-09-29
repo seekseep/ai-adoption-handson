@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>交通費の集計</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="main.js" defer></script>
+  </head>
+  <body>
+    <h1>交通費の集計</h1>
+    <p class="lead">
+      入力 → 処理 → 出力。Web アプリケーションは、この 3 つを画面から操作できるようにしたものです。
+    </p>
+
+    <div class="pipeline">
+      <section class="stage">
+        <h2><span class="badge">入力</span>明細を貼る</h2>
+        <p class="hint">1 行に 1 件。<code>日付 区間 金額</code> の順に、空白区切りで書きます。</p>
+        <textarea id="entries" rows="12" spellcheck="false"></textarea>
+        <button id="run" type="button">集計する</button>
+      </section>
+
+      <section class="stage">
+        <h2><span class="badge">処理</span>やっていること</h2>
+        <p class="hint">ボタンを押すと、上から順にこれが実行されます。</p>
+        <ol id="steps" class="steps"></ol>
+      </section>
+
+      <section class="stage">
+        <h2><span class="badge">出力</span>結果</h2>
+        <table class="result">
+          <thead>
+            <tr><th>日付</th><th>件数</th><th class="num">金額</th></tr>
+          </thead>
+          <tbody id="rows"></tbody>
+          <tfoot>
+            <tr><th colspan="2">合計</th><th class="num" id="total">0 円</th></tr>
+          </tfoot>
+        </table>
+        <ul id="problems" class="problems"></ul>
+        <button id="download" type="button" class="secondary">CSV で保存</button>
+      </section>
+    </div>
+  </body>
+</html>

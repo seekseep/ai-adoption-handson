@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>権限モードで何が変わるか</title>
+    <style>
+      :root { color-scheme: light; }
+
+      body {
+        margin: 0;
+        padding: 20px 16px 28px;
+        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+        line-height: 1.6;
+        color: #1f2933;
+        background: #f7f8fa;
+      }
+
+      h1 { margin: 0 0 4px; font-size: 1rem; }
+
+      .lead { margin: 0 0 16px; font-size: 0.8rem; color: #616e7c; }
+
+      .modes { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+
+      .modes label {
+        padding: 7px 14px;
+        font-size: 0.82rem;
+        background: #fff;
+        border: 1px solid #cbd2d9;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+
+      .modes input { display: none; }
+
+      .modes input:checked + span {
+        font-weight: 600;
+        color: #2b6cb0;
+      }
+
+      .modes label:has(input:checked) {
+        background: #e8f0fb;
+        border-color: #2b6cb0;
+      }
+
+      .note {
+        margin: 0 0 16px;
+        padding: 10px 12px;
+        font-size: 0.8rem;
+        background: #fff;
+        border-left: 3px solid #2b6cb0;
+      }
+
+      table { width: 100%; font-size: 0.8rem; border-collapse: collapse; background: #fff; }
+
+      th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid #e3e8ee; }
+
+      th { font-size: 0.72rem; color: #616e7c; background: #f4f6f8; }
+
+      .where { font-size: 0.7rem; color: #9aa5b1; }
+
+      .verdict { font-weight: 600; white-space: nowrap; }
+      .free { color: #2f855a; }
+      .ask  { color: #b7791f; }
+      .auto { color: #2b6cb0; }
+      .none { color: #a4303f; }
+    </style>
+    <script src="main.js" defer></script>
+  </head>
+  <body>
+    <h1>権限モードで何が変わるか</h1>
+    <p class="lead">モードを切り替えると、Codex が何にどこまで手を出せるかが変わります。</p>
+
+    <div class="modes">
+      <label><input type="radio" name="mode" value="ask" checked /><span>確認してもらう</span></label>
+      <label><input type="radio" name="mode" value="auto" /><span>自動で確認</span></label>
+      <label><input type="radio" name="mode" value="full" /><span>全部まかせる</span></label>
+    </div>
+
+    <p id="note" class="note"></p>
+
+    <table>
+      <thead>
+        <tr><th>対象</th><th>Codex の扱い</th></tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </body>
+</html>

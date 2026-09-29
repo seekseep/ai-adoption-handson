@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ひな形</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="main.js" defer></script>
+  </head>
+  <body>
+    <h1 id="title">ひな形</h1>
+    <p class="lead">
+      入力 → 処理 → 出力 の形だけが入っています。ここを土台に、自分の業務のツールへ育ててください。
+    </p>
+
+    <div class="layout">
+      <section class="panel">
+        <h2><span class="badge">入力</span>データ</h2>
+        <p class="hint" id="data-hint">1 行に 1 件。自分の業務のデータに合わせて書き換えます。</p>
+        <textarea id="data" rows="10" spellcheck="false"></textarea>
+
+        <h2 class="spaced"><span class="badge">入力</span>条件</h2>
+        <p class="hint">毎回変わる設定を書く欄です。使わないなら消してかまいません。</p>
+        <textarea id="rules" rows="3" spellcheck="false"></textarea>
+
+        <button id="run" type="button">実行する</button>
+      </section>
+
+      <section class="panel">
+        <h2><span class="badge">処理</span>やっていること</h2>
+        <ol id="steps" class="steps"></ol>
+
+        <h2 class="spaced"><span class="badge">出力</span>結果</h2>
+        <table class="result">
+          <thead id="head"></thead>
+          <tbody id="rows"></tbody>
+        </table>
+        <ul id="problems" class="problems"></ul>
+        <button id="download" type="button" class="secondary">CSV で保存</button>
+      </section>
+    </div>
+  </body>
+</html>

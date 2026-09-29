@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>仕組みからデータを作る</title>
+    <style>
+      :root { color-scheme: light; }
+      body {
+        margin: 0; padding: 18px 16px 24px;
+        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+        line-height: 1.6; color: #1f2933; background: #f7f8fa;
+      }
+      h1 { margin: 0 0 14px; font-size: 0.95rem; }
+      .cols { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
+      .col { flex: 1 1 240px; min-width: 0; }
+      h2 { margin: 0 0 6px; font-size: 0.72rem; color: #616e7c; letter-spacing: .04em; }
+      .rule { margin-bottom: 10px; padding: 10px 12px; font-size: 0.78rem;
+        background: #fff; border: 1px solid #cbd2d9; border-radius: 6px; }
+      .rule label { display: block; margin-bottom: 4px; font-size: 0.72rem; color: #616e7c; }
+      .rule input[type="range"] { width: 100%; }
+      .rule .value { font-weight: 600; color: #2b6cb0; }
+      table { width: 100%; font-size: 0.75rem; border-collapse: collapse; background: #fff;
+        border: 1px solid #cbd2d9; border-radius: 6px; overflow: hidden; }
+      th, td { padding: 5px 8px; text-align: left; border-bottom: 1px solid #e3e8ee; }
+      th { font-size: 0.68rem; color: #616e7c; background: #f4f6f8; }
+      .arrow { display: grid; place-items: center; flex: 0 0 28px; padding-top: 34px;
+        font-size: 1.2rem; color: #9aa5b1; }
+      .note { margin: 8px 0 0; font-size: 0.72rem; color: #616e7c; }
+    </style>
+    <script src="main.js" defer></script>
+  </head>
+  <body>
+    <h1>条件を決めると、当番表が生まれる</h1>
+    <div class="cols">
+      <div class="col">
+        <h2>入力（条件だけ。データは無い）</h2>
+        <div class="rule">
+          <label>当番にする人数：<span class="value" id="people-value">4</span> 人</label>
+          <input type="range" id="people" min="2" max="8" value="4" />
+        </div>
+        <div class="rule">
+          <label>作る日数：<span class="value" id="days-value">10</span> 日</label>
+          <input type="range" id="days" min="3" max="20" value="10" />
+        </div>
+        <div class="rule">
+          <label>1 日あたりの当番：<span class="value" id="per-day-value">2</span> 人</label>
+          <input type="range" id="per-day" min="1" max="3" value="2" />
+        </div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="col">
+        <h2>出力（作られた当番表）</h2>
+        <table>
+          <thead><tr><th>日</th><th>当番</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+        <p id="note" class="note"></p>
+      </div>
+    </div>
+  </body>
+</html>

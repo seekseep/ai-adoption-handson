@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="270" viewBox="0 0 840 270" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Segoe UI',sans-serif">
+<defs><marker id="aR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 z" fill="#475569"/></marker><marker id="aRsub" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 z" fill="#94a3b8"/></marker></defs>
+<rect x="0" y="0" width="840" height="270" fill="#ffffff"/>
+<text x="420" y="36" text-anchor="middle" font-size="21" fill="#0f172a" font-weight="700">入力もデータ、出力もデータ</text>
+<polygon points="82.8,117 255,117 217.2,203 45,203" fill="#dbeafe" stroke="#3b82f6" stroke-width="3.5"/>
+<text x="150" y="167.35" text-anchor="middle" font-size="21" fill="#1d4ed8" font-weight="700">入力データ</text>
+<polygon points="369.6,117 470.4,117 510,160 470.4,203 369.6,203 330,160" fill="#dcfce7" stroke="#22c55e" stroke-width="3.5"/>
+<text x="420" y="167.35" text-anchor="middle" font-size="21" fill="#15803d" font-weight="700">変換</text>
+<polygon points="622.8,117 795,117 757.2,203 585,203" fill="#dbeafe" stroke="#3b82f6" stroke-width="3.5"/>
+<text x="690" y="167.35" text-anchor="middle" font-size="21" fill="#1d4ed8" font-weight="700">出力データ</text>
+<path d="M242.10 160.00 L324.00 160.00" fill="none" stroke="#475569" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#aR)"/>
+<path d="M516.00 160.00 L597.90 160.00" fill="none" stroke="#475569" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#aR)"/>
+</svg>

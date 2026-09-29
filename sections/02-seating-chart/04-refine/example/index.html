@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>座席表</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="main.js" defer></script>
+  </head>
+  <body>
+    <h1>座席表</h1>
+
+    <div class="layout">
+      <section class="panel">
+        <h2>座席のマップ</h2>
+        <p class="hint">
+          1 行が横 1 列分です。席の名前を空白で区切って書きます。<code>.</code> は通路になります。
+        </p>
+        <textarea id="map" rows="6" spellcheck="false"></textarea>
+
+        <h2 class="spaced">席の情報</h2>
+        <p class="hint">
+          1 行に 1 件。<code>席の名前 固定 名前</code> か <code>席の名前 使用しない</code> と書きます。
+        </p>
+        <textarea id="seat-info" rows="6" spellcheck="false"></textarea>
+
+        <h2 class="spaced">出席</h2>
+        <p class="hint">
+          1 行に 1 人。<code>名前 出席</code> か <code>名前 欠席</code> と書きます。
+        </p>
+        <textarea id="attendance" rows="9" spellcheck="false"></textarea>
+
+        <h2 class="spaced">席の希望・条件</h2>
+        <p class="hint">
+          1 行に 1 件。<code>離す A B</code> / <code>となり A B</code> /
+          <code>前の方 A</code> / <code>後ろの方 A</code>
+        </p>
+        <textarea id="rules" rows="5" spellcheck="false"></textarea>
+
+        <button id="draw" type="button">座席表を作る</button>
+      </section>
+
+      <section class="panel">
+        <h2>できた座席表</h2>
+        <div id="chart" class="chart"></div>
+        <p id="summary" class="summary"></p>
+        <ul id="rule-results" class="rule-results"></ul>
+        <ul class="legend">
+          <li><span class="swatch swatch-free"></span>空き席</li>
+          <li><span class="swatch swatch-fixed"></span>固定席</li>
+          <li><span class="swatch swatch-assigned"></span>割り当てた席</li>
+          <li><span class="swatch swatch-disabled"></span>使用しない席</li>
+        </ul>
+      </section>
+    </div>
+  </body>
+</html>

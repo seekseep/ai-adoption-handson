@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>シフト表を組む</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="main.js" defer></script>
+  </head>
+  <body>
+    <h1>シフト表を組む</h1>
+    <p class="lead">
+      入力した内容はこのページの中だけで処理されます。インターネットへの通信は一切ありません。
+    </p>
+
+    <div class="layout">
+      <section class="panel">
+        <h2>勤務できる曜日</h2>
+        <p class="hint">1 行に 1 人。<code>名前</code> のあとに、出られる曜日を空白で並べます。</p>
+        <textarea id="staff" rows="8" spellcheck="false"></textarea>
+
+        <h2 class="spaced">条件</h2>
+        <p class="hint">
+          <code>1日の人数 2</code> / <code>最大勤務日数 4</code> /
+          <code>連勤上限 3</code> の 3 種類が書けます。
+        </p>
+        <textarea id="rules" rows="4" spellcheck="false"></textarea>
+
+        <button id="build" type="button">シフトを組む</button>
+      </section>
+
+      <section class="panel">
+        <h2>できたシフト表</h2>
+        <table class="shift">
+          <thead>
+            <tr><th>曜日</th><th>担当</th><th class="num">人数</th></tr>
+          </thead>
+          <tbody id="shift-rows"></tbody>
+        </table>
+
+        <h2 class="spaced">1 人あたりの勤務日数</h2>
+        <ul id="counts" class="counts"></ul>
+
+        <h2 class="spaced">条件の確認</h2>
+        <ul id="checks" class="checks"></ul>
+
+        <button id="download" type="button" class="secondary">CSV で保存</button>
+      </section>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,159 @@
+:root {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  padding: 24px 16px 48px;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  line-height: 1.7;
+  color: #1f2933;
+  background: #f7f8fa;
+}
+
+h1 {
+  margin: 0 0 4px;
+  font-size: 1.4rem;
+}
+
+.lead {
+  margin: 0 0 24px;
+  font-size: 0.82rem;
+  color: #2f855a;
+}
+
+h2 {
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+  color: #3e4c59;
+}
+
+.spaced {
+  margin-top: 20px;
+}
+
+.layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.panel {
+  flex: 1 1 320px;
+  min-width: 0;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #d8dee6;
+  border-radius: 10px;
+}
+
+.hint {
+  margin: 0 0 8px;
+  font-size: 0.78rem;
+  color: #616e7c;
+}
+
+.hint code {
+  padding: 1px 4px;
+  background: #eef1f5;
+  border-radius: 3px;
+}
+
+textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.8rem;
+  line-height: 1.7;
+  background: #fbfcfd;
+  border: 1px solid #cbd2d9;
+  border-radius: 6px;
+  resize: vertical;
+}
+
+button {
+  margin-top: 12px;
+  padding: 8px 20px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: #fff;
+  background: #2b6cb0;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button.secondary {
+  color: #2b6cb0;
+  background: #fff;
+  border: 1px solid #2b6cb0;
+}
+
+.shift {
+  width: 100%;
+  font-size: 0.85rem;
+  border-collapse: collapse;
+}
+
+.shift th,
+.shift td {
+  padding: 6px 8px;
+  text-align: left;
+  border-bottom: 1px solid #e3e8ee;
+}
+
+.shift thead th {
+  font-size: 0.72rem;
+  color: #616e7c;
+  background: #f4f6f8;
+}
+
+.num {
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* 人数が足りない日。黙って減らさず、目立たせる。 */
+.shift tr.short {
+  color: #a4303f;
+  background: #fdf0f1;
+}
+
+.counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin: 0;
+  padding: 0;
+  font-size: 0.82rem;
+  list-style: none;
+}
+
+.checks {
+  margin: 0;
+  padding: 0;
+  font-size: 0.82rem;
+  list-style: none;
+}
+
+.checks li {
+  padding: 2px 0 2px 18px;
+  text-indent: -18px;
+}
+
+.checks .ok::before {
+  content: '○ ';
+  color: #2f855a;
+}
+
+.checks .ng::before {
+  content: '× ';
+  color: #a4303f;
+}
+
+.checks .ng {
+  color: #a4303f;
+}
