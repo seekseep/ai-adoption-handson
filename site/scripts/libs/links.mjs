@@ -130,11 +130,12 @@ export function transformLinks(content, { sourceDir, sourceSiteUrl, repo, base, 
     if (!target.startsWith('./') && !target.startsWith('../')) return match;
     if (resolved.startsWith('..') || resolved === '..') return match;
 
-    // section 内の画像 (`<sec>/<lec>/images/...`) は public/ にコピーして base 相対で
-    // 配信する。GitHub raw (main) と違い、push しなくてもローカル・本番の両方で表示される。
+    // section 内の画像 (`<sec>/<lec>/images/...`・`<sec>/images/...`) は public/ にコピーして
+    // base 相対で配信する。GitHub raw (main) と違い、push しなくてもローカル・本番の両方で表示される。
     if (isImage) {
-      const im = resolved.match(/^sections\/([\w-]+)\/([\w-]+)\/(images\/.+)$/);
-      if (im) return `${prefix}(${base}/${im[1]}/${im[2]}/${im[3]}${hash}${titlePart})`;
+      // セクション概要用の `<sec>/images/...` も同じくコピー済みなので、そのまま対応づける。
+      const im = resolved.match(/^sections\/((?:[\w-]+\/){1,2})(images\/.+)$/);
+      if (im) return `${prefix}(${base}/${im[1]}${im[2]}${hash}${titlePart})`;
     }
 
     const toUrl = resolveSiteUrl(resolved, isDirLink);
