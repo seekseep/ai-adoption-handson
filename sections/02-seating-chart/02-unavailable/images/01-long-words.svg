@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="300" viewBox="0 0 880 300" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic','Segoe UI',sans-serif">
+<defs><marker id="aR" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 z" fill="#475569"/></marker><marker id="aRsub" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 z" fill="#94a3b8"/></marker></defs>
+<rect x="0" y="0" width="880" height="300" fill="#ffffff"/>
+<text x="440" y="38" text-anchor="middle" font-size="21" fill="#0f172a" font-weight="700">場所で指すと、言い方が長くなる</text>
+<rect x="40" y="80" width="380" height="190" rx="16" fill="#ffedd5" stroke="#f97316" stroke-width="3.5"/>
+<text x="230" y="110" text-anchor="middle" font-size="17" fill="#c2410c" font-weight="600">場所で指す</text>
+<text x="230" y="170" text-anchor="middle" font-size="15" fill="#475569" font-weight="400">「4 列目の、左のかたまりの</text>
+<text x="230" y="200" text-anchor="middle" font-size="15" fill="#475569" font-weight="400">　通路側の机」</text>
+<rect x="460" y="80" width="380" height="190" rx="16" fill="#dcfce7" stroke="#22c55e" stroke-width="3.5"/>
+<text x="650" y="110" text-anchor="middle" font-size="17" fill="#15803d" font-weight="600">番号で指す</text>
+<text x="650" y="185" text-anchor="middle" font-size="21" fill="#0f172a" font-weight="700">「17 番」</text>
+<line x1="425" y1="175" x2="455" y2="175" stroke="#475569" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#aR)"/>
+</svg>

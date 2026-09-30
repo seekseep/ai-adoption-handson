@@ -13,7 +13,7 @@
 | 用語 | 指すもの | 例 |
 |---|---|---|
 | **セクション** | テーマで束ねた親ディレクトリ（`sections/<section>/`） | `02-seating-chart/` |
-| **レクチャー** | 1 つのステップ（`sections/<section>/<lecture>/`） | `02-seating-chart/01-layout/` |
+| **レクチャー** | 1 つのステップ（`sections/<section>/<lecture>/`） | `02-seating-chart/01-room/` |
 
 - レクチャーは `README.md`（プロジェクト説明）と `LECTURE.md`（教材本文, `docs: true`）を持つ
 - ディレクトリ名は `NN-<slug>`。番号がサイト sidebar の並び順になる

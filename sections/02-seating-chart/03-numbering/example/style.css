@@ -1,0 +1,53 @@
+/* 座席表アプリの見た目。
+   ダークモードに引っぱられて読めなくならないよう light に固定している。 */
+:root {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  padding: 24px 16px 48px;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  line-height: 1.7;
+  color: #1f2933;
+  background: #f7f8fa;
+}
+
+h1 {
+  margin: 0 0 24px;
+  font-size: 1.5rem;
+}
+
+.panel {
+  width: fit-content;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #d8dee6;
+  border-radius: 10px;
+}
+
+/* 図は画面の幅に合わせて縮める。保存される PNG の大きさは変わらない */
+canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #e4e7eb;
+}
+
+button {
+  margin-top: 12px;
+  padding: 8px 20px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: #fff;
+  background: #2b6cb0;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #245a93;
+}

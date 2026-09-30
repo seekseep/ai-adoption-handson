@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>座席表</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="main.js" defer></script>
+  </head>
+  <body>
+    <h1>座席表</h1>
+
+    <section class="panel controls">
+      <h2>名簿の CSV</h2>
+      <p class="hint">
+        1 行目は見出しで <code>クラス,名前</code>。2 行目からは <code>Aクラス,千葉 陸</code> のように書きます。
+        クラスごとに 1 枚ずつ座席表を作ります。ファイルはこのページの中で読むだけで、どこにも送りません。
+      </p>
+      <input id="csv-file" type="file" accept=".csv,text/csv" />
+      <p id="status" class="status"></p>
+      <button id="save-all" type="button">まとめて PNG で保存</button>
+    </section>
+
+    <div id="charts" class="charts"></div>
+  </body>
+</html>

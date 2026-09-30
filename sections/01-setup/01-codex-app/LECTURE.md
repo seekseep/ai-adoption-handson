@@ -129,4 +129,4 @@ Codex と ChatGPT アプリは更新が速く、ボタンの名前や場所が�
 環境構築の残り 2 つ（[Python](../02-python/LECTURE.md) /
 [Node.js](../03-nodejs/LECTURE.md)）は参考ページなので飛ばしてかまいません。
 
-そのまま [座席の配置図を作る](../../02-seating-chart/01-layout/LECTURE.md) に進んでください。
+そのまま [部屋と机を描く](../../02-seating-chart/01-room/LECTURE.md) に進んでください。

@@ -1,0 +1,123 @@
+/* 座席表アプリの見た目。
+   ダークモードに引っぱられて読めなくならないよう light に固定している。 */
+:root {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  padding: 24px 16px 48px;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  line-height: 1.7;
+  color: #1f2933;
+  background: #f7f8fa;
+}
+
+h1 {
+  margin: 0 0 24px;
+  font-size: 1.5rem;
+}
+
+.panel {
+  width: fit-content;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #d8dee6;
+  border-radius: 10px;
+}
+
+/* 図は画面の幅に合わせて縮める。保存される PNG の大きさは変わらない */
+canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #e4e7eb;
+}
+
+button {
+  margin-top: 12px;
+  padding: 8px 20px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: #fff;
+  background: #2b6cb0;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #245a93;
+}
+
+h2 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  color: #3e4c59;
+}
+
+.hint {
+  margin: 0 0 12px;
+  font-size: 0.85rem;
+  color: #616e7c;
+}
+
+.hint code {
+  padding: 1px 4px;
+  background: #eef1f5;
+  border-radius: 3px;
+}
+
+.controls {
+  width: auto;
+  margin-bottom: 24px;
+}
+
+.status {
+  margin: 12px 0 0;
+  font-size: 0.9rem;
+}
+
+.status.warn {
+  color: #b44d12;
+}
+
+button:disabled {
+  background: #9aa5b1;
+  cursor: default;
+}
+
+button.secondary {
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  color: #2b6cb0;
+  background: #fff;
+  border: 1px solid #2b6cb0;
+}
+
+/* できた座席表を横に並べる。1 枚ずつは小さく見せ、保存される PNG は元の大きさのまま */
+.charts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.charts figure {
+  margin: 0;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #d8dee6;
+  border-radius: 10px;
+}
+
+.charts canvas {
+  width: 100% !important;
+}
+
+.charts figcaption {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
