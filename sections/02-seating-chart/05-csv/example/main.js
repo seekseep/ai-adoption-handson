@@ -18,58 +18,74 @@ const SAMPLE_CSV = [
   'Cクラス,久保 誠', 'Cクラス,近藤 杏', 'Cクラス,酒井 翔太',
 ].join('\n');
 
-// ---- 部屋と机（単位は m） ----
+// ---- 部屋とテーブル（単位は m） ----
 
-// 部屋: 横 10m × 奥行き 9m。前（図の上側）の壁にホワイトボードがある
+// 部屋: 横 10m × 奥行き 8m。前（図の上側）の壁にホワイトボードがある
 const ROOM_WIDTH = 10;
-const ROOM_DEPTH = 9;
+const ROOM_DEPTH = 8;
 
-// 机: 幅 1.2m × 奥行き 0.6m の 1 人用
-const DESK_WIDTH = 1.2;
-const DESK_DEPTH = 0.6;
+// テーブル: 直径 1.2m の丸テーブル。まわりに椅子を 6 脚、等間隔に置く
+const TABLE_DIAMETER = 1.2;
+const CHAIRS_PER_TABLE = 6;
 
-// 並べ方: 真ん中に 1.2m の通路。左右それぞれ机を横に 3 台くっつけて、前から 5 列。列の間は 0.9m
-const AISLE = 1.2;
-const DESKS_PER_SIDE = 3;
-const ROWS = 5;
-const ROW_GAP = 0.9;
+// 並べ方: 横に 3 卓 × 前から 2 列。テーブルの中心どうしの間隔は、横 3.2m・縦 3m
+const TABLE_COLUMNS = 3;
+const TABLE_ROWS = 2;
+const TABLE_GAP_X = 3.2;
+const TABLE_GAP_Y = 3;
 
-// 前の壁から 1 列目の机までの距離。ホワイトボードの前はあけておく
-const FRONT_SPACE = 1.5;
+// 前の壁から、1 列目のテーブルの中心までの距離。ホワイトボードの前はあけておく
+const FRONT_SPACE = 2.4;
 
-// 使えない席。row は前から何列目、col は左から何台目（通路をまたいで 1〜6）
+// 椅子（＝1 人分の席）の大きさと、テーブルの中心から椅子の中心までの距離
+const SEAT_WIDTH = 0.95;
+const SEAT_DEPTH = 0.4;
+const SEAT_DISTANCE = 1.15;
+
+// 使えない席。table はテーブルの番号、chair は椅子の番号（前側から時計回りに 1〜6）
 const UNAVAILABLE = [
-  { row: 1, col: 1 }, // 1 列目の左端: 出入口の前
-  { row: 1, col: 6 }, // 1 列目の右端: 出入口の前
-  { row: 4, col: 3 }, // 4 列目の左のかたまりの通路側: 柱がある
+  { table: 1, chair: 6 }, // テーブル 1 の左前: 出入口の前
+  { table: 3, chair: 2 }, // テーブル 3 の右前: 出入口の前
+  { table: 5, chair: 4 }, // テーブル 5 のいちばん後ろ: 柱がある
 ];
 
 // ---- 描き方 ----
 
-const SCALE = 70; // 1m を何ピクセルで描くか
+const SCALE = 80; // 1m を何ピクセルで描くか
 const MARGIN = 48; // 部屋のまわりの余白（px）。「前」の文字を置く場所
-const LEGEND_SPACE = 32; // 図の下に凡例を書くためにあける高さ（px）
 const TITLE_SPACE = 44; // 図の上に見出しを書くためにあける高さ（px）
+const LEGEND_SPACE = 32; // 図の下に凡例を書くためにあける高さ（px）
 const PIXEL_RATIO = 2; // 保存する PNG を何倍の細かさで描くか。印刷してもぼやけないように 2 倍
 
+// テーブルと椅子の位置（部屋の左上の角からの距離, m）を、並べ方の数字から計算する。
+// テーブルは前の列の左から順に 1, 2, 3…。椅子はテーブルの前側から時計回りに 1〜6。
+function layoutTables() {
+  const tables = [];
+  // テーブルのかたまり全体を、部屋の左右の真ん中に置く
+  const left = ROOM_WIDTH / 2 - (TABLE_COLUMNS - 1) * TABLE_GAP_X / 2;
 
-// 机の位置（部屋の左上の角からの距離, m）を、並べ方の数字から計算する。
-// row は前から何列目、col は左から何台目（通路をまたいで 1〜6）。
-function layoutDesks() {
-  const desks = [];
-  const blockWidth = DESK_WIDTH * DESKS_PER_SIDE;
-  // 左右の机のかたまりと通路をまとめて、部屋の真ん中に置く
-  const left = (ROOM_WIDTH - (blockWidth * 2 + AISLE)) / 2;
-
-  for (let row = 0; row < ROWS; row++) {
-    const y = FRONT_SPACE + row * (DESK_DEPTH + ROW_GAP);
-    for (let i = 0; i < DESKS_PER_SIDE * 2; i++) {
-      // 右側のかたまりは、通路の幅だけ右にずらす
-      const x = left + i * DESK_WIDTH + (i >= DESKS_PER_SIDE ? AISLE : 0);
-      desks.push({ x: x, y: y, row: row + 1, col: i + 1 });
+  for (let row = 0; row < TABLE_ROWS; row++) {
+    for (let col = 0; col < TABLE_COLUMNS; col++) {
+      const table = {
+        number: tables.length + 1,
+        x: left + col * TABLE_GAP_X,
+        y: FRONT_SPACE + row * TABLE_GAP_Y,
+        seats: [],
+      };
+      for (let i = 0; i < CHAIRS_PER_TABLE; i++) {
+        // 真上（前側）から始めて、時計回りに等間隔。canvas は下向きが +y なので角度が増えると時計回り
+        const angle = -Math.PI / 2 + (i * 2 * Math.PI) / CHAIRS_PER_TABLE;
+        table.seats.push({
+          table: table.number,
+          chair: i + 1,
+          x: table.x + Math.cos(angle) * SEAT_DISTANCE,
+          y: table.y + Math.sin(angle) * SEAT_DISTANCE,
+        });
+      }
+      tables.push(table);
     }
   }
-  return desks;
+  return tables;
 }
 
 // m で表した位置を、canvas 上のピクセルに直す
@@ -122,59 +138,74 @@ function drawChart(canvas, title, names) {
   ctx.font = 'bold 14px sans-serif';
   ctx.fillText('前', toX(ROOM_WIDTH / 2), toY(0) - 10);
 
-  for (const desk of numberSeats(layoutDesks())) {
-    // 番号は 1 から、配列の位置は 0 から数えるので 1 ずらす。名簿より席が多ければ undefined（空席）
-    const name = desk.number === null ? undefined : names[desk.number - 1];
-    drawDesk(ctx, toX(desk.x), toY(desk.y), desk.number, name);
+  for (const table of numberSeats(layoutTables())) {
+    drawTable(ctx, table);
+    for (const seat of table.seats) {
+      // 番号は 1 から、配列の位置は 0 から数えるので 1 ずらす。名簿より席が多ければ undefined（空席）
+      const name = seat.number === null ? undefined : names[seat.number - 1];
+      drawSeat(ctx, toX(seat.x), toY(seat.y), seat.number, name);
+    }
   }
 
   drawLegend(ctx, toY(ROOM_DEPTH) + 28);
 }
 
-// 使える席に、前の列の左から順に番号を振る。
-// layoutDesks() は前の列から、同じ列の中は左から順に机を返すので、その順に数えればよい
-function numberSeats(desks) {
+// 使える席に、テーブルの番号順・椅子の番号順に通し番号を振る。
+// layoutTables() はテーブル 1 から順に、椅子は前側から時計回りに返すので、その順に数えればよい
+function numberSeats(tables) {
   let number = 0;
-  for (const desk of desks) {
-    if (isUnavailable(desk)) {
-      desk.number = null;
-    } else {
-      number++;
-      desk.number = number;
+  for (const table of tables) {
+    for (const seat of table.seats) {
+      if (isUnavailable(seat)) {
+        seat.number = null;
+      } else {
+        number++;
+        seat.number = number;
+      }
     }
   }
-  return desks;
+  return tables;
 }
 
-function isUnavailable(desk) {
+function isUnavailable(seat) {
   return UNAVAILABLE.some(function (u) {
-    return u.row === desk.row && u.col === desk.col;
+    return u.table === seat.table && u.chair === seat.chair;
   });
 }
 
-// 机を 1 台描く。x, y は机の左上の角（px）。number が null なら使えない席。name が無ければ空席
-function drawDesk(ctx, x, y, number, name) {
-  const w = DESK_WIDTH * SCALE;
-  const h = DESK_DEPTH * SCALE;
+// 丸テーブルを 1 卓描く。真ん中にテーブルの番号を書く
+function drawTable(ctx, table) {
+  ctx.fillStyle = '#fdf6e3';
+  ctx.strokeStyle = '#52606d';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.arc(toX(table.x), toY(table.y), (TABLE_DIAMETER / 2) * SCALE, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = '#7b8794';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = '12px sans-serif';
+  ctx.fillText('テーブル ' + table.number, toX(table.x), toY(table.y));
+}
+
+// 椅子（席）を 1 脚描く。cx, cy は椅子の中心（px）。number が null なら使えない席。name が無ければ空席
+function drawSeat(ctx, cx, cy, number, name) {
+  const w = SEAT_WIDTH * SCALE;
+  const h = SEAT_DEPTH * SCALE;
   const unavailable = number === null;
-
-  // 椅子は机の後ろ側に描く。どちらを向いて座るかが図でわかるように。使えない席には置かない
-  if (!unavailable) {
-    ctx.fillStyle = '#cbd2d9';
-    ctx.beginPath();
-    ctx.roundRect(x + w / 2 - 0.22 * SCALE, y + h + 0.08 * SCALE, 0.44 * SCALE, 0.3 * SCALE, 4);
-    ctx.fill();
-  }
-
   ctx.fillStyle = unavailable ? '#e4e7eb' : '#ffffff';
   ctx.strokeStyle = '#52606d';
   ctx.lineWidth = 1.5;
-  ctx.fillRect(x, y, w, h);
-  ctx.strokeRect(x, y, w, h);
+  ctx.beginPath();
+  ctx.roundRect(cx - w / 2, cy - h / 2, w, h, 6);
+  ctx.fill();
+  ctx.stroke();
 
   // 使えない席は × を付ける。白黒で印刷しても灰色と見分けられるように
   if (unavailable) {
-    drawCross(ctx, x + w / 2, y + h / 2, h * 0.28);
+    drawCross(ctx, cx, cy, h * 0.28);
     return;
   }
 
@@ -183,7 +214,7 @@ function drawDesk(ctx, x, y, number, name) {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.font = 'bold 16px sans-serif';
-    ctx.fillText(String(number), x + w / 2, y + h / 2);
+    ctx.fillText(String(number), cx, cy);
     return;
   }
 
@@ -192,16 +223,16 @@ function drawDesk(ctx, x, y, number, name) {
   ctx.textAlign = 'left';
   ctx.textBaseline = 'top';
   ctx.font = '10px sans-serif';
-  ctx.fillText(String(number), x + 4, y + 3);
+  ctx.fillText(String(number), cx - w / 2 + 4, cy - h / 2 + 2);
 
   ctx.fillStyle = '#1f2933';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.font = 'bold ' + fitFontSize(ctx, name, w - 8, 15) + 'px sans-serif';
-  ctx.fillText(name, x + w / 2, y + h / 2 + 5);
+  ctx.font = 'bold ' + fitFontSize(ctx, name, w - 8, 14) + 'px sans-serif';
+  ctx.fillText(name, cx, cy + 5);
 }
 
-// 長い名前が机からはみ出さないよう、幅に収まるまで文字を小さくする
+// 長い名前が席からはみ出さないよう、幅に収まるまで文字を小さくする
 function fitFontSize(ctx, text, maxWidth, size) {
   while (size > 8) {
     ctx.font = 'bold ' + size + 'px sans-serif';
@@ -283,9 +314,13 @@ async function readCsvFile(file) {
 }
 
 function countSeats() {
-  return numberSeats(layoutDesks()).filter(function (desk) {
-    return desk.number !== null;
-  }).length;
+  let count = 0;
+  for (const table of numberSeats(layoutTables())) {
+    for (const seat of table.seats) {
+      if (seat.number !== null) count++;
+    }
+  }
+  return count;
 }
 
 // クラスごとに座席表を描いて、画面に並べる

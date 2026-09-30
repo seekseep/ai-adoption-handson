@@ -33,8 +33,8 @@ def link(c, a, b, label=None, label_scale="label"):
 
 # 00: 使える席に前から順に番号を振る。使えない席は飛ばす
 c = Canvas(820, 280)
-c.text(410, 38, "使える席に、前の列の左から番号を振る", scale="heading")
-desks = node(c, 160, 165, "机の並び", emoji_cp="1fa91", w=130, h=100)
+c.text(410, 38, "使える席に、テーブル 1 から順に番号を振る", scale="heading")
+desks = node(c, 160, 165, "テーブルと椅子", emoji_cp="1fa91", w=130, h=100)
 rule = node(c, 410, 165, "使えない席は飛ばす", emoji_cp="1f6ab", shape="sticky", color="orange", w=190, h=96)
 nums = node(c, 670, 165, "1, 2, 3 …", emoji_cp="1f522", w=130, h=100)
 link(c, desks, rule, label="数える")

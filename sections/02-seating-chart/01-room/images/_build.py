@@ -31,10 +31,10 @@ def link(c, a, b, label=None, label_scale="label"):
     x2, y2 = _edge(b, a[0], a[1])
     c.connector(x1, y1, x2, y2, label=label, label_scale=label_scale)
 
-# 00: 部屋と机を言葉で伝えると、そのとおりの図が画像で手に入る
+# 00: 部屋とテーブルを言葉で伝えると、そのとおりの図が画像で手に入る
 c = Canvas(820, 280)
-c.text(410, 38, "言葉で伝えた部屋と机が、そのまま画像になる", scale="heading")
-words = node(c, 140, 165, "部屋と机の説明", emoji_cp="1f4ac", w=140, h=100)
+c.text(410, 38, "言葉で伝えた部屋とテーブルが、そのまま画像になる", scale="heading")
+words = node(c, 140, 165, "部屋とテーブルの説明", emoji_cp="1f4ac", w=140, h=100)
 codex = node(c, 410, 165, "Codex", emoji_cp="2699", shape="sticky", color="blue", w=150, h=96)
 png = node(c, 680, 165, "座席表.png", emoji_cp="1f5bc", w=130, h=100)
 link(c, words, codex, label="頼む")
@@ -44,7 +44,7 @@ print(c.save("00-thumbnail.svg"))
 # 01: 変えたいことも言葉で伝える。書き換わるのはプログラムの中の数字
 c = Canvas(880, 300)
 c.text(440, 38, "変えたいときも、言葉で頼むだけ", scale="heading")
-ask = node(c, 130, 170, "「机を 4 台ずつに」", emoji_cp="1f4ac", w=170, h=100)
+ask = node(c, 130, 170, "「テーブルを横 4 卓に」", emoji_cp="1f4ac", w=170, h=100)
 code = node(c, 440, 170, "main.js の数字", emoji_cp="1f4dd", shape="sticky", color="yellow", w=170, h=80)
 png = node(c, 750, 170, "新しい図", emoji_cp="1f5bc", w=120, h=100)
 link(c, ask, code, label="Codex が書き換え", label_scale="caption")

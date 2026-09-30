@@ -58,7 +58,7 @@ Codex は「このフォルダの中で作業してください」とフォル�
 
 ### 02. 座席表を作る
 
-- [部屋と机を描く](./02-seating-chart/01-room/LECTURE.md)
+- [部屋とテーブルを描く](./02-seating-chart/01-room/LECTURE.md)
 - [使えない席を指定する](./02-seating-chart/02-unavailable/LECTURE.md)
 - [席に番号を振る](./02-seating-chart/03-numbering/LECTURE.md)
 - [席に名前を入れる](./02-seating-chart/04-names/LECTURE.md)
