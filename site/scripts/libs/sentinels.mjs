@@ -24,6 +24,8 @@
  *   ::preview{demo="<name>"}       example/ ではなく demos/<name>/ を表示する。
  *                                  1 レクチャーに複数置けるので、1 ページに何個でも埋め込める。
  *   ::preview{height="220"}        iframe の高さ（px）を上書きする（既定は CSS の 480px）。
+ *   ::preview{width="1100"}        その幅の画面として描き、枠に縮小して見せる（height は縮小後の高さ）。
+ *   ::preview{src="<sec>/<lec>"} はトップ・セクション概要など、レクチャー以外のページでも使える。
  *   ::preview[キャプション]{...}    figcaption を付けられる。
  *
  * 生成物: エディタは `::::editor{...}` コンテナ（remark-editor.mjs が <section class="editor">
@@ -157,11 +159,21 @@ async function buildAssetsBlock({ exampleAbs, sec, lec, base, label }) {
 }
 
 /** ライブプレビュー（iframe）の生 HTML を作る。空行を含めない（HTML ブロックを壊さないため）。 */
-function buildPreviewBlock({ base, sec, lec, demo, caption, height }) {
+function buildPreviewBlock({ base, sec, lec, demo, caption, height, width }) {
   const src = previewUrlFor(base, sec, lec, demo);
   const cap = caption ? `<figcaption class="lecture-preview__caption">${caption}</figcaption>` : '';
   // 高さは CSS（.lecture-preview__frame）の既定 480px を inline style で上書きする。
-  const style = /^\d+$/.test(String(height ?? '')) ? ` style="height:${height}px"` : '';
+  let style = /^\d+$/.test(String(height ?? '')) ? ` style="height:${height}px"` : '';
+  // width を指定すると、その幅の画面として描いてから枠（720px）に縮めて見せる。
+  // 2 列レイアウトの完成例を、1 列に崩さずに全体が見える形で載せたいとき用。
+  // height は「見た目の高さ」。縮小率は preview-client.js が枠の実幅から決め直す。
+  if (/^\d+$/.test(String(width ?? ''))) {
+    const h = /^\d+$/.test(String(height ?? '')) ? Number(height) : 480;
+    const zoom = Math.min(1, 720 / Number(width));
+    style =
+      ` data-width="${width}"` +
+      ` style="width:${width}px;max-width:none;height:${Math.round(h / zoom)}px;zoom:${zoom.toFixed(4)}"`;
+  }
   return (
     `<figure class="lecture-preview">` +
     `<div class="lecture-preview__bar">` +
@@ -175,10 +187,11 @@ function buildPreviewBlock({ base, sec, lec, demo, caption, height }) {
 
 /**
  * 本文中の `::codeview` / `::assets` / `::preview` センチネルを展開する。
- * current = { sec, lec }（このレクチャー）。lecture 以外の docs では素通しする。
+ * current = { sec, lec }（このレクチャー）。lecture 以外の docs（トップ・セクション概要）では
+ * 「現在のレクチャー」が無いので、`::preview{src="<sec>/<lec>"}` だけを展開し、他は素通しする。
  */
 export async function expandSentinels(body, { lectureAbsDir, sec, lec, base }) {
-  if (!sec || !lec) return body;
+  if (!sec || !lec) return expandPreviewsOnly(body, { base });
   const exampleAbs = path.join(lectureAbsDir, EXAMPLE_DIR);
   const where = `sections/${sec}/${lec}`;
 
@@ -239,10 +252,37 @@ export async function expandSentinels(body, { lectureAbsDir, sec, lec, base }) {
         demo: attrs.demo,
         caption,
         height: attrs.height,
+        width: attrs.width,
       }));
       continue;
     }
     out.push(line);
   }
   return out.join('\n');
+}
+
+/** レクチャー以外の docs 用。src 付きの `::preview` だけを展開する（src が無いと指す先が無い）。 */
+function expandPreviewsOnly(body, { base }) {
+  return body
+    .split('\n')
+    .map((line) => {
+      const pv = line.match(PREVIEW_RE);
+      if (!pv) return line;
+      const attrs = parseAttrs(pv[2]);
+      const parts = (attrs.src || '').split('/');
+      if (parts.length !== 2) {
+        console.warn(`[sentinels] ::preview outside a lecture needs src="<sec>/<lec>" (skipped): ${line}`);
+        return line;
+      }
+      return buildPreviewBlock({
+        base,
+        sec: parts[0],
+        lec: parts[1],
+        demo: attrs.demo,
+        caption: pv[1] ? pv[1].trim() : '',
+        height: attrs.height,
+        width: attrs.width,
+      });
+    })
+    .join('\n');
 }
