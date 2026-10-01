@@ -147,6 +147,50 @@
   box-shadow: 0 2px 8px rgb(0 0 0 / 0.06);
 }
 
+/* 添付ファイルのカード。入力欄の上に並べて、ファイルを付けて頼んでいることが分かるようにする */
+.codex-prompt__files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: 0.7rem 0.6rem 0;
+}
+
+.codex-prompt__file {
+  width: 9.5rem;
+  overflow: hidden;
+  border: 1px solid var(--cp-composer-border);
+  border-radius: 0.6rem;
+  background: var(--cp-main);
+}
+
+/* 中身のプレビューの代わりに、表らしい薄い線だけ描く */
+.codex-prompt__file-preview {
+  height: 3.6rem;
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 0.55rem, var(--cp-composer-border) 0.55rem calc(0.55rem + 1px)),
+    var(--cp-prompt-bg);
+}
+
+.codex-prompt__file-name {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.55rem;
+  border-top: 1px solid var(--cp-composer-border);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.codex-prompt__file-name svg {
+  color: var(--cp-file-color);
+}
+
+.codex-prompt__file-name span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* プロンプト本文。その場で書き換えられる。読みやすさ優先で、等幅ではなく本文と同じ書体・大きめの文字にする。
    高さは中身に合わせて prompt-client.js が伸ばすので、手で大きさを変える取っ手は出さない */
 .codex-prompt .codex-prompt__text {

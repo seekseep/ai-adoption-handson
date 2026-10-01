@@ -18,6 +18,11 @@
  *   :::
  *
  * project を省くと、プロジェクト名は「作業フォルダ」になる。
+ *
+ * ファイルを添付して頼む場面では、attachments に「ファイル名とタイプ」の配列を JSON で書く。
+ * 入力欄の上に、Codex アプリの添付と同じようなカードが並ぶ（中身は描かない。添付していることが分かれば十分）。
+ *   :::prompt{project="座席表" attachments='[{"name":"names.csv","type":"csv"}]'}
+ * type は csv / excel / image / pdf / text。それ以外はふつうのファイルのアイコンになる。
  */
 
 /** 子ノードを再帰的にたどって最初の code ノードを返す。 */
@@ -65,7 +70,47 @@ const ICONS = {
   copy: svg('<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>'),
 };
 
-function buildHtml(text, project) {
+// 添付ファイルのタイプごとのアイコンと色。Codex アプリの添付カードの雰囲気に合わせる
+const FILE_TYPES = {
+  csv: { color: '#16a34a', icon: svg('<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M4 15h16M10 4v16"/>') },
+  excel: { color: '#16a34a', icon: svg('<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M4 15h16M10 4v16"/>') },
+  image: { color: '#7c3aed', icon: svg('<rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="M20 16l-5-5-8 8"/>') },
+  pdf: { color: '#dc2626', icon: svg('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/>') },
+  text: { color: '#2563eb', icon: svg('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>') },
+};
+const FILE_DEFAULT = { color: '#6b7280', icon: FILE_TYPES.pdf.icon };
+
+/** attachments 属性（JSON の配列）を読む。書き間違いはビルドを止めずに警告して無視する。 */
+function parseAttachments(raw) {
+  if (!raw) return [];
+  try {
+    const list = JSON.parse(raw);
+    if (!Array.isArray(list)) throw new Error('配列ではありません');
+    return list.filter((a) => a && typeof a.name === 'string');
+  } catch (e) {
+    console.warn(`[remark-prompt] attachments を読めませんでした: ${e.message} (${raw})`);
+    return [];
+  }
+}
+
+function buildAttachments(attachments) {
+  if (attachments.length === 0) return '';
+  const cards = attachments
+    .map((a) => {
+      const t = FILE_TYPES[String(a.type || '').toLowerCase()] || FILE_DEFAULT;
+      return (
+        `<div class="codex-prompt__file" style="--cp-file-color:${t.color}">` +
+        // 上半分は中身のプレビューの代わり。何が入っているかは描かず、ファイルの形だけ見せる
+        `<div class="codex-prompt__file-preview" aria-hidden="true"></div>` +
+        `<div class="codex-prompt__file-name">${t.icon}<span>${escapeHtml(a.name)}</span></div>` +
+        `</div>`
+      );
+    })
+    .join('');
+  return `<div class="codex-prompt__files" aria-label="添付ファイル">${cards}</div>`;
+}
+
+function buildHtml(text, project, attachments) {
   const rail = ['home', 'clock', 'books', 'plugin', 'at', 'more', 'branch']
     .map((name) => `<span class="codex-prompt__rail-icon">${ICONS[name]}</span>`)
     .join('');
@@ -84,6 +129,7 @@ function buildHtml(text, project) {
     `</div>` +
     `<div class="codex-prompt__main">` +
     `<div class="codex-prompt__composer">` +
+    buildAttachments(attachments) +
     // 教材の文面は textarea の初期値（defaultValue）として持ち、「元に戻す」で使う
     `<textarea class="codex-prompt__text" spellcheck="false" aria-label="Codex に貼るプロンプト（書き換えられます）">${escapeHtml(text)}</textarea>` +
     `<div class="codex-prompt__bar">` +
@@ -108,7 +154,8 @@ export default function remarkPrompt() {
       const project = (node.attributes && node.attributes.project) || '作業フォルダ';
       // 子を持たない html ノードに置き換える。中のコードブロックは Expressive Code に渡さない。
       node.type = 'html';
-      node.value = buildHtml(code.value, project);
+      const attachments = parseAttachments(node.attributes && node.attributes.attachments);
+      node.value = buildHtml(code.value, project, attachments);
       delete node.children;
       delete node.name;
       delete node.attributes;
