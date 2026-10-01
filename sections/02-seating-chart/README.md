@@ -1,5 +1,4 @@
 ---
-docs: true
 title: 座席表を作る
 sidebar:
   label: 概要

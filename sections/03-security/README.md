@@ -1,5 +1,4 @@
 ---
-docs: true
 title: セキュリティの話
 sidebar:
   label: 概要

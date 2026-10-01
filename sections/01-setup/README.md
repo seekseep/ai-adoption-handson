@@ -1,5 +1,4 @@
 ---
-docs: true
 title: 環境構築
 sidebar:
   label: 概要

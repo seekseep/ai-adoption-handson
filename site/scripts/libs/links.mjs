@@ -8,9 +8,10 @@
  *   - 手書きセンチネル `./project.zip` → 生成した配布 ZIP の URL に差し替え
  */
 
+import { existsSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
-import { REPO_SUBDIR } from './paths.mjs';
+import { REPO_SUBDIR, ROOT } from './paths.mjs';
 
 // Astro の画像最適化 (Sharp) でビルドが落ちるなど、src/content/docs/ 経由で
 // 載せられないアセットを site/public/ に置き、Markdown 内の参照を
@@ -55,6 +56,21 @@ function relativeUrl(fromUrl, toUrl, hash = '') {
  * resolved (リポジトリルートからの POSIX 相対) を、サイト URL に変換する。
  * 一致しなければ null を返す。
  */
+/**
+ * セクション（`sections/<sec>/`）の最初のレクチャーの URL を返す。
+ * セクションの概要ページはサイトに載せないので、セクションへのリンクはここへ向ける。
+ */
+function firstLectureUrl(sec) {
+  const dir = path.join(ROOT, 'sections', sec);
+  if (!existsSync(dir)) return null;
+  const first = readdirSync(dir, { withFileTypes: true })
+    .filter((d) => d.isDirectory() && /^\d{2}-/.test(d.name))
+    .map((d) => d.name)
+    .sort()
+    .find((name) => existsSync(path.join(dir, name, 'LECTURE.md')));
+  return first ? `/${sec}/${first}/` : null;
+}
+
 function resolveSiteUrl(resolved, isDirLink) {
   if (resolved === 'sections/README.md') return '/getting-started/';
 
@@ -62,7 +78,7 @@ function resolveSiteUrl(resolved, isDirLink) {
   if (m && m[1] !== 'README') return `/${m[1].toLowerCase()}/`;
 
   m = resolved.match(/^sections\/([\w-]+)\/README\.md$/);
-  if (m) return `/${m[1]}/`;
+  if (m) return firstLectureUrl(m[1]);
 
   m = resolved.match(/^sections\/([\w-]+)\/([\w-]+)\/LECTURE\.md$/i);
   if (m) return `/${m[1]}/${m[2]}/`;
@@ -74,7 +90,7 @@ function resolveSiteUrl(resolved, isDirLink) {
     m = resolved.match(/^sections\/([\w-]+)\/([\w-]+)$/);
     if (m) return `/${m[1]}/${m[2]}/`;
     m = resolved.match(/^sections\/([\w-]+)$/);
-    if (m) return `/${m[1]}/`;
+    if (m) return firstLectureUrl(m[1]);
   }
   return null;
 }

@@ -1,5 +1,4 @@
 ---
-docs: true
 title: 自分の業務に応用する
 sidebar:
   label: 概要

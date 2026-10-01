@@ -1,5 +1,4 @@
 ---
-docs: true
 title: データと仕組み
 sidebar:
   label: 概要

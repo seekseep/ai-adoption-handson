@@ -1,5 +1,4 @@
 ---
-docs: true
 title: シフト表を作る
 sidebar:
   label: 概要
