@@ -134,7 +134,9 @@ Codex はフォルダの中を読みます。作業フォルダに実データ�
 
 ::preview[ひな形です。データを書き換えて「実行する」を押してみてください]{height="680"}
 
-::codeview[ひな形のコード（`process` の中だけを書き換えます）]{defaultFile="main.js"}
+:::download
+[完成例をダウンロード](./project.zip)
+:::
 
 ## 次へ
 

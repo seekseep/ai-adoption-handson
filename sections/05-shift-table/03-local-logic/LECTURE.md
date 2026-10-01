@@ -140,7 +140,9 @@ title: データを渡さない仕組みを作る
 
 ::preview[条件を書き換えて「シフトを組む」を押してください。無理な条件にすると不足が赤く出ます]{height="700"}
 
-::codeview{defaultFile="main.js"}
+:::download
+[完成例をダウンロード](./project.zip)
+:::
 
 ## 次へ
 

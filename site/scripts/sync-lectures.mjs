@@ -38,7 +38,8 @@ const MAX_FILE_BYTES = 200 * 1024;
 const PUBLISH_FLAG = 'docs';
 
 /**
- * レクチャーの source dir がプロジェクト (package.json あり) なら、配布 ZIP の URL を返す。
+ * レクチャーが完成例 (example/) を持っていれば、配布 ZIP の URL を返す。
+ * build-downloads.mjs が ZIP にするのは example/ なので、判定もそれに合わせる。
  * naming.mjs の命名規約 (<sec>-<lec>.zip) を build-downloads.mjs と共有する。対象でなければ null。
  * 本文中に手書きした `./project.zip` リンクを transformLinks でこの URL に差し替えるために使う。
  */
@@ -46,7 +47,7 @@ async function resolveDownloadUrl(sourceDir, base) {
   const parsed = parseLectureRel(sourceDir);
   if (!parsed) return null;
   try {
-    await stat(path.join(ROOT, sourceDir, 'package.json'));
+    await stat(path.join(ROOT, sourceDir, 'example'));
   } catch (e) {
     if (e.code === 'ENOENT') return null;
     throw e;

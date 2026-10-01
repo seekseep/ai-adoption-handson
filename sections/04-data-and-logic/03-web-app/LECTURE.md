@@ -101,7 +101,9 @@ Codex に頼むときも、この 1 行を足してください。
 
 ::preview[明細を足したり消したりして、処理と出力がどう変わるか確かめてください]{height="620"}
 
-::codeview{defaultFile="main.js"}
+:::download
+[完成例をダウンロード](./project.zip)
+:::
 
 ## 次へ
 
