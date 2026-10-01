@@ -138,6 +138,13 @@ export function transformLinks(content, { sourceDir, sourceSiteUrl, repo, base, 
       if (im) return `${prefix}(${base}/${im[1]}${im[2]}${hash}${titlePart})`;
     }
 
+    // 完成例に入れたダミーデータ（`<sec>/<lec>/example/*.csv` など）は、プレビュー用に
+    // public/preview/<sec>-<lec>/ へコピー済み。そこを指せば、ページからそのまま保存できる。
+    if (!isImage) {
+      const ex = resolved.match(/^sections\/([\w-]+)\/([\w-]+)\/example\/([^/]+\.(?:csv|tsv|txt|json|xlsx))$/);
+      if (ex) return `${prefix}(${base}/preview/${ex[1]}-${ex[2]}/${ex[3]}${hash}${titlePart})`;
+    }
+
     const toUrl = resolveSiteUrl(resolved, isDirLink);
     if (toUrl) {
       return `${prefix}(${relativeUrl(sourceSiteUrl, toUrl, hash)}${titlePart})`;
