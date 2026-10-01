@@ -133,6 +133,8 @@ export default defineConfig({
         // `:::prompt` のコピーボタン client。
         { tag: 'script', content: promptClient },
       ],
+      // 右側（スマホでは上）の「目次」は出さない。1 ページが短く、受講者が迷う要素を減らすため。
+      tableOfContents: false,
       defaultLocale: 'root',
       locales: {
         root: { label: '日本語', lang: 'ja' },
