@@ -93,7 +93,3 @@ title: 使えない席を指定する
 :::download
 [完成例をダウンロード](./project.zip)
 :::
-
-## 次へ
-
-次は [席に番号を振る](../03-numbering/LECTURE.md) です。
