@@ -37,7 +37,7 @@
 
 .codex-prompt__app {
   display: grid;
-  grid-template-columns: 2.6rem 8.5rem 1fr;
+  grid-template-columns: 2.9rem 1fr;
   overflow: hidden;
   border: 1px solid var(--cp-border);
   border-radius: 0.9rem;
@@ -77,7 +77,20 @@
   flex: none;
 }
 
-/* メニューとプロジェクトの一覧 */
+/* 一覧と本文をまとめた 1 枚のペイン。アイコン列の上に、角を丸めて重ねる */
+.codex-prompt__pane {
+  display: grid;
+  grid-template-columns: 8.5rem 1fr;
+  min-width: 0;
+  margin: 0.45rem 0.45rem 0.45rem 0;
+  overflow: hidden;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.75rem;
+  background: var(--cp-main);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.08);
+}
+
+/* プロジェクトの一覧 */
 .codex-prompt__side {
   display: flex;
   flex-direction: column;
@@ -122,12 +135,9 @@
   flex-direction: column;
   justify-content: flex-end;
   min-width: 0;
-  margin: 0.5rem 0.5rem 0.5rem -0.6rem;
   padding: 2rem 0.75rem 0.75rem;
-  border: 1px solid var(--cp-border);
-  border-radius: 0.75rem;
+  border-left: 1px solid var(--cp-border);
   background: var(--cp-main);
-  box-shadow: 0 1px 3px rgb(0 0 0 / 0.08);
 }
 
 .codex-prompt__composer {
@@ -137,51 +147,16 @@
   box-shadow: 0 2px 8px rgb(0 0 0 / 0.06);
 }
 
-.codex-prompt__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  padding: 0.55rem 0.6rem 0 0.9rem;
-}
-
-.codex-prompt__hint {
-  color: var(--cp-muted);
-  font-size: 0.75rem;
-}
-
-.codex-prompt__copy {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.35rem 0.75rem;
-  border: 1px solid var(--cp-composer-border);
-  border-radius: 999px;
-  background: var(--cp-main);
-  color: var(--cp-text);
-  font: inherit;
-  font-weight: 700;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.codex-prompt__copy:hover {
-  border-color: var(--cp-send);
-  color: var(--cp-send);
-}
-
-.codex-prompt__copy[data-copied] {
-  border-color: #16a34a;
-  color: #16a34a;
-}
-
-/* プロンプト本文。読みやすさ優先で、等幅ではなく本文と同じ書体・大きめの文字にする */
+/* プロンプト本文。その場で書き換えられる。読みやすさ優先で、等幅ではなく本文と同じ書体・大きめの文字にする。
+   高さは中身に合わせて prompt-client.js が伸ばすので、手で大きさを変える取っ手は出さない */
 .codex-prompt .codex-prompt__text {
-  margin: 0.5rem 0.6rem 0;
+  display: block;
+  box-sizing: border-box;
+  width: calc(100% - 1.2rem);
+  margin: 0.6rem 0.6rem 0;
   padding: 0.8rem 0.9rem;
-  border: 0;
-  border-left: 3px solid var(--cp-send);
-  border-radius: 0.4rem;
+  border: 1px solid transparent;
+  border-radius: 0.6rem;
   background: var(--cp-prompt-bg);
   color: var(--cp-text);
   font-family: var(--sl-font);
@@ -189,9 +164,16 @@
   line-height: 1.75;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+  overflow: hidden;
+  resize: none;
 }
 
-/* 入力欄の下のボタン列（雰囲気だけ。押しても何も起きない） */
+.codex-prompt .codex-prompt__text:focus {
+  border-color: var(--cp-send);
+  outline: none;
+}
+
+/* 入力欄の下のボタン列。左の ＋ と権限は雰囲気だけ、右下の 2 つは本当に押せる */
 .codex-prompt__bar {
   display: flex;
   align-items: center;
@@ -218,14 +200,46 @@
   flex: 1;
 }
 
-.codex-prompt__send {
-  display: grid;
-  place-items: center;
-  width: 1.9rem;
-  height: 1.9rem;
+.codex-prompt__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--cp-composer-border);
   border-radius: 999px;
+  background: var(--cp-main);
+  color: var(--cp-text);
+  font: inherit;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.codex-prompt__button:hover:not(:disabled) {
+  border-color: var(--cp-send);
+  color: var(--cp-send);
+}
+
+.codex-prompt__button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* コピーは送信ボタンの位置なので、同じ青で目立たせる */
+.codex-prompt__copy {
+  border-color: var(--cp-send);
   background: var(--cp-send);
   color: #fff;
+}
+
+.codex-prompt__copy:hover:not(:disabled) {
+  color: #fff;
+  filter: brightness(1.1);
+}
+
+.codex-prompt__copy[data-copied] {
+  border-color: #16a34a;
+  background: #16a34a;
 }
 
 /* 狭いときは、左の列を消して入力欄だけにする */
@@ -236,16 +250,17 @@
 
   .codex-prompt__rail,
   .codex-prompt__side,
-  .codex-prompt__hint {
+  .codex-prompt__chip {
     display: none;
   }
 
-  .codex-prompt__head {
-    justify-content: flex-end;
+  .codex-prompt__pane {
+    grid-template-columns: 1fr;
+    margin: 0.45rem;
   }
 
   .codex-prompt__main {
-    margin: 0.5rem;
     padding-top: 1rem;
+    border-left: 0;
   }
 }

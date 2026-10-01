@@ -2,11 +2,13 @@
  * `:::prompt` コンテナディレクティブを「Codex アプリの入力欄に貼った状態」の見た目に変換する
  * remark プラグイン。
  *
- * 受講者が「どこに・何を貼るのか」をひと目で分かるよう、Codex アプリの左のメニューと
- * プロジェクトの一覧を描き、その上に重ねた入力欄の中にプロンプトを置く。
+ * 受講者が「どこに・何を貼るのか」をひと目で分かるよう、Codex アプリの左のアイコン列の上に
+ * プロジェクトの一覧と本文を 1 枚のペインとして重ね、本文の入力欄の中にプロンプトを置く。
  * 見た目は雰囲気だけで、ウィンドウの閉じるボタンなどは描かない（Windows と Mac で違うため）。
  * チャットのやりとりも描かない。主役は入力欄の中のプロンプト。
- * コピーボタンの動きは src/scripts/prompt-client.js、装飾は src/styles/prompt.css。
+ * 入力欄はその場で書き換えられ、書き換えた内容はブラウザ（localStorage）に一定間隔で保存される。
+ * 右下の「元に戻す」で教材の文面に戻し、「コピー」でクリップボードに入れる。
+ * 動きは src/scripts/prompt-client.js、装飾は src/styles/prompt.css。
  *
  * 使い方（Markdown）:
  *   :::prompt{project="座席表"}
@@ -58,12 +60,10 @@ const ICONS = {
   at: svg('<circle cx="12" cy="12" r="3.5"/><path d="M15.5 12v1.5a2.5 2.5 0 0 0 5 0V12a8.5 8.5 0 1 0-3.4 6.8"/>'),
   more: svg('<circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/>'),
   branch: svg('<circle cx="7" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="8" r="2"/><path d="M7 8v8M17 10c0 4-10 2-10 6"/>'),
-  edit: svg('<path d="M12 20h8"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>'),
   folder: svg('<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>'),
   plus: svg('<path d="M12 5v14M5 12h14"/>'),
   shield: svg('<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/>'),
-  mic: svg('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>'),
-  send: svg('<path d="M12 19V5M5 12l7-7 7 7"/>'),
+  undo: svg('<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>'),
   copy: svg('<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>'),
 };
 
@@ -75,25 +75,24 @@ function buildHtml(text, project) {
     `<figure class="codex-prompt">` +
     `<div class="codex-prompt__app">` +
     `<div class="codex-prompt__rail" aria-hidden="true">${rail}</div>` +
+    // 一覧と本文は 1 枚のペインにまとめ、アイコン列の上に重ねる（Codex アプリと同じ重なり方）
+    `<div class="codex-prompt__pane">` +
     `<div class="codex-prompt__side" aria-hidden="true">` +
     `<div class="codex-prompt__brand">Codex <span class="codex-prompt__caret">⌄</span></div>` +
-    `<div class="codex-prompt__item">${ICONS.edit}新しいチャット</div>` +
     `<div class="codex-prompt__label">プロジェクト</div>` +
     `<div class="codex-prompt__item codex-prompt__item--active">${ICONS.folder}${escapeHtml(project)}</div>` +
     `</div>` +
     `<div class="codex-prompt__main">` +
     `<div class="codex-prompt__composer">` +
-    `<div class="codex-prompt__head">` +
-    `<span class="codex-prompt__hint">この文を Codex の入力欄に貼ります</span>` +
-    `<button type="button" class="codex-prompt__copy">${ICONS.copy}<span class="codex-prompt__copy-label">コピー</span></button>` +
-    `</div>` +
-    `<pre class="codex-prompt__text">${escapeHtml(text)}</pre>` +
-    `<div class="codex-prompt__bar" aria-hidden="true">` +
-    `<span class="codex-prompt__tool">${ICONS.plus}</span>` +
-    `<span class="codex-prompt__chip">${ICONS.shield}確認してもらう</span>` +
+    // 教材の文面は textarea の初期値（defaultValue）として持ち、「元に戻す」で使う
+    `<textarea class="codex-prompt__text" spellcheck="false" aria-label="Codex に貼るプロンプト（書き換えられます）">${escapeHtml(text)}</textarea>` +
+    `<div class="codex-prompt__bar">` +
+    `<span class="codex-prompt__tool" aria-hidden="true">${ICONS.plus}</span>` +
+    `<span class="codex-prompt__chip" aria-hidden="true">${ICONS.shield}確認してもらう</span>` +
     `<span class="codex-prompt__spacer"></span>` +
-    `<span class="codex-prompt__tool">${ICONS.mic}</span>` +
-    `<span class="codex-prompt__send">${ICONS.send}</span>` +
+    `<button type="button" class="codex-prompt__button codex-prompt__reset" disabled>${ICONS.undo}元に戻す</button>` +
+    `<button type="button" class="codex-prompt__button codex-prompt__copy">${ICONS.copy}<span class="codex-prompt__copy-label">コピー</span></button>` +
+    `</div>` +
     `</div>` +
     `</div>` +
     `</div>` +
