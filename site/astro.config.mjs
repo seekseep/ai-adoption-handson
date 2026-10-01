@@ -10,6 +10,7 @@ import remarkDownload from './src/plugins/remark-download.mjs';
 import remarkEditor from './src/plugins/remark-editor.mjs';
 import remarkScript from './src/plugins/remark-script.mjs';
 import remarkCode from './src/plugins/remark-code.mjs';
+import remarkPrompt from './src/plugins/remark-prompt.mjs';
 import ecLineNumbers from './src/plugins/ec-line-numbers.mjs';
 import lectureSync from './src/integrations/lecture-sync.mjs';
 
@@ -43,6 +44,12 @@ const previewClient = readFileSync(
   'utf8',
 );
 
+// `:::prompt` のコピーボタンの client。全ページに inline 注入。
+const promptClient = readFileSync(
+  fileURLToPath(new URL('./src/scripts/prompt-client.js', import.meta.url)),
+  'utf8',
+);
+
 /**
  * カスタム callout（remark-callout.mjs）を Starlight 標準の asides より「前」に
  * 登録するためのインライン統合。Starlight は astro:config:setup で自身の remark
@@ -67,6 +74,8 @@ function calloutIntegration() {
         config.markdown.processor?.options.remarkPlugins.push(remarkScript);
         // `:::code{filepath=... offset=...}` をファイル名 + 行番号つきコードに変換。
         config.markdown.processor?.options.remarkPlugins.push(remarkCode);
+        // `:::prompt` を「Codex アプリの入力欄に貼った状態」の見た目に変換。
+        config.markdown.processor?.options.remarkPlugins.push(remarkPrompt);
       },
     },
   };
@@ -105,6 +114,7 @@ export default defineConfig({
         './src/styles/download.css',
         './src/styles/editor.css',
         './src/styles/code.css',
+        './src/styles/prompt.css',
       ],
       // `:::code` が付けた startLineNumber / startNewLineNumber を読んで
       // ガターに行番号を出す自作プラグイン。それ以外のコードブロックには何もしない。
@@ -120,6 +130,8 @@ export default defineConfig({
         { tag: 'script', content: runScripts },
         // `::preview` の再読み込みボタン client。
         { tag: 'script', content: previewClient },
+        // `:::prompt` のコピーボタン client。
+        { tag: 'script', content: promptClient },
       ],
       defaultLocale: 'root',
       locales: {

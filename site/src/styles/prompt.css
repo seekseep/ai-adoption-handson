@@ -1,0 +1,251 @@
+/* `:::prompt`（remark-prompt.mjs が生成する `.codex-prompt`）。
+   Codex アプリの「左のメニュー＋プロジェクト一覧＋その上に重なった本文エリア」の雰囲気だけを描き、
+   本文エリアの入力欄にプロンプトを置く。ライト/ダークはサイトのテーマに合わせる。 */
+
+.codex-prompt {
+  --cp-frame: #e9eaee;
+  --cp-rail: #e9eaee;
+  --cp-side: #f3f4f6;
+  --cp-main: #ffffff;
+  --cp-border: #d9dbe1;
+  --cp-text: #1f2328;
+  --cp-muted: #6b7280;
+  --cp-active: #e4e6ea;
+  --cp-composer: #ffffff;
+  --cp-composer-border: #d0d4db;
+  --cp-prompt-bg: #f6f8fb;
+  --cp-send: #2f6fed;
+  margin: 1.5rem 0;
+  /* 本文の列の幅に合わせて、狭いときは左の列を消すため */
+  container-type: inline-size;
+}
+
+:root[data-theme='dark'] .codex-prompt {
+  --cp-frame: #2b2c30;
+  --cp-rail: #2b2c30;
+  --cp-side: #303135;
+  --cp-main: #1f2023;
+  --cp-border: #3c3e44;
+  --cp-text: #eceef2;
+  --cp-muted: #a0a4ad;
+  --cp-active: #3d3f45;
+  --cp-composer: #2a2b2f;
+  --cp-composer-border: #45474e;
+  --cp-prompt-bg: #232428;
+  --cp-send: #3b7bf2;
+}
+
+.codex-prompt__app {
+  display: grid;
+  grid-template-columns: 2.6rem 8.5rem 1fr;
+  overflow: hidden;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.9rem;
+  background: var(--cp-frame);
+  color: var(--cp-text);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+/* 左端のアイコン列 */
+.codex-prompt__rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.9rem 0;
+  background: var(--cp-rail);
+  color: var(--cp-muted);
+}
+
+.codex-prompt__rail-icon {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+}
+
+.codex-prompt__rail-icon:first-child {
+  background: var(--cp-active);
+  color: var(--cp-text);
+}
+
+.codex-prompt svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  flex: none;
+}
+
+/* メニューとプロジェクトの一覧 */
+.codex-prompt__side {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.9rem 0.6rem;
+  background: var(--cp-side);
+}
+
+.codex-prompt__brand {
+  margin: 0 0.4rem 0.6rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.codex-prompt__caret {
+  color: var(--cp-muted);
+  font-weight: 400;
+}
+
+.codex-prompt__item {
+  display: flex;
+  white-space: nowrap;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem;
+  border-radius: 0.45rem;
+}
+
+.codex-prompt__item--active {
+  background: var(--cp-active);
+}
+
+.codex-prompt__label {
+  margin: 0.7rem 0.4rem 0.15rem;
+  color: var(--cp-muted);
+  font-size: 0.75rem;
+}
+
+/* 一覧の上に重なる本文エリア。ここではチャットは描かず、入力欄だけを置く */
+.codex-prompt__main {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-width: 0;
+  margin: 0.5rem 0.5rem 0.5rem -0.6rem;
+  padding: 2rem 0.75rem 0.75rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.75rem;
+  background: var(--cp-main);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.08);
+}
+
+.codex-prompt__composer {
+  border: 1px solid var(--cp-composer-border);
+  border-radius: 1rem;
+  background: var(--cp-composer);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.06);
+}
+
+.codex-prompt__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.55rem 0.6rem 0 0.9rem;
+}
+
+.codex-prompt__hint {
+  color: var(--cp-muted);
+  font-size: 0.75rem;
+}
+
+.codex-prompt__copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--cp-composer-border);
+  border-radius: 999px;
+  background: var(--cp-main);
+  color: var(--cp-text);
+  font: inherit;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.codex-prompt__copy:hover {
+  border-color: var(--cp-send);
+  color: var(--cp-send);
+}
+
+.codex-prompt__copy[data-copied] {
+  border-color: #16a34a;
+  color: #16a34a;
+}
+
+/* プロンプト本文。読みやすさ優先で、等幅ではなく本文と同じ書体・大きめの文字にする */
+.codex-prompt .codex-prompt__text {
+  margin: 0.5rem 0.6rem 0;
+  padding: 0.8rem 0.9rem;
+  border: 0;
+  border-left: 3px solid var(--cp-send);
+  border-radius: 0.4rem;
+  background: var(--cp-prompt-bg);
+  color: var(--cp-text);
+  font-family: var(--sl-font);
+  font-size: 0.95rem;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* 入力欄の下のボタン列（雰囲気だけ。押しても何も起きない） */
+.codex-prompt__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.7rem;
+  color: var(--cp-muted);
+}
+
+.codex-prompt__tool {
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+.codex-prompt__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+}
+
+.codex-prompt__spacer {
+  flex: 1;
+}
+
+.codex-prompt__send {
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 999px;
+  background: var(--cp-send);
+  color: #fff;
+}
+
+/* 狭いときは、左の列を消して入力欄だけにする */
+@container (max-width: 32rem) {
+  .codex-prompt__app {
+    grid-template-columns: 1fr;
+  }
+
+  .codex-prompt__rail,
+  .codex-prompt__side,
+  .codex-prompt__hint {
+    display: none;
+  }
+
+  .codex-prompt__head {
+    justify-content: flex-end;
+  }
+
+  .codex-prompt__main {
+    margin: 0.5rem;
+    padding-top: 1rem;
+  }
+}
