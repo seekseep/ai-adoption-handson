@@ -61,8 +61,6 @@ const ICONS = {
   more: svg('<circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/>'),
   branch: svg('<circle cx="7" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="8" r="2"/><path d="M7 8v8M17 10c0 4-10 2-10 6"/>'),
   folder: svg('<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>'),
-  plus: svg('<path d="M12 5v14M5 12h14"/>'),
-  shield: svg('<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/>'),
   undo: svg('<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>'),
   copy: svg('<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>'),
 };
@@ -72,7 +70,9 @@ function buildHtml(text, project) {
     .map((name) => `<span class="codex-prompt__rail-icon">${ICONS[name]}</span>`)
     .join('');
   return (
-    `<figure class="codex-prompt">` +
+    // not-content: Starlight が本文の要素どうしに付ける上の余白を、この部品の中では効かせない
+    // （付くと「元に戻す」と「コピー」の高さがずれる）
+    `<figure class="codex-prompt not-content">` +
     `<div class="codex-prompt__app">` +
     `<div class="codex-prompt__rail" aria-hidden="true">${rail}</div>` +
     // 一覧と本文は 1 枚のペインにまとめ、アイコン列の上に重ねる（Codex アプリと同じ重なり方）
@@ -87,9 +87,6 @@ function buildHtml(text, project) {
     // 教材の文面は textarea の初期値（defaultValue）として持ち、「元に戻す」で使う
     `<textarea class="codex-prompt__text" spellcheck="false" aria-label="Codex に貼るプロンプト（書き換えられます）">${escapeHtml(text)}</textarea>` +
     `<div class="codex-prompt__bar">` +
-    `<span class="codex-prompt__tool" aria-hidden="true">${ICONS.plus}</span>` +
-    `<span class="codex-prompt__chip" aria-hidden="true">${ICONS.shield}確認してもらう</span>` +
-    `<span class="codex-prompt__spacer"></span>` +
     `<button type="button" class="codex-prompt__button codex-prompt__reset" disabled>${ICONS.undo}元に戻す</button>` +
     `<button type="button" class="codex-prompt__button codex-prompt__copy">${ICONS.copy}<span class="codex-prompt__copy-label">コピー</span></button>` +
     `</div>` +

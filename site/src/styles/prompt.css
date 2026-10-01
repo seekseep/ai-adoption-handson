@@ -173,31 +173,13 @@
   outline: none;
 }
 
-/* 入力欄の下のボタン列。左の ＋ と権限は雰囲気だけ、右下の 2 つは本当に押せる */
+/* 入力欄の下のボタン列。右下に「元に戻す」と「コピー」を並べる */
 .codex-prompt__bar {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 0.5rem;
-  padding: 0.55rem 0.7rem;
-  color: var(--cp-muted);
-}
-
-.codex-prompt__tool {
-  display: grid;
-  place-items: center;
-  width: 1.8rem;
-  height: 1.8rem;
-}
-
-.codex-prompt__chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.78rem;
-}
-
-.codex-prompt__spacer {
-  flex: 1;
+  padding: 0.6rem 0.7rem;
 }
 
 .codex-prompt__button {
@@ -249,8 +231,7 @@
   }
 
   .codex-prompt__rail,
-  .codex-prompt__side,
-  .codex-prompt__chip {
+  .codex-prompt__side {
     display: none;
   }
 
